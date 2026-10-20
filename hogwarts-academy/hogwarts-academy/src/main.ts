@@ -13,7 +13,7 @@ import {
   type AttackSpell,
   type NonHealingCategory,
 } from "./types";
-
+import { Cache } from "./decorators";
 import { WizardRepository, SpellRepository } from "./repository";
 import { Log } from "./decorators";
 
@@ -206,4 +206,18 @@ try {
 } catch (error) {
   console.error("Caught expected error:", (error as Error).message);
 }
+class SpellCalculator {
+  @Cache
+  calculatePower(basePower: number, multiplier: number): number {
+    console.log("Calculating...");
+    return basePower * multiplier;
+  }
+}
+
+console.log("\n--- Test Cache (Exercise 5) ---");
+const calculator = new SpellCalculator();
+
+console.log(calculator.calculatePower(10, 3)); // Doit afficher "Calculating..." puis 30
+console.log(calculator.calculatePower(10, 3)); // Doit afficher "[CACHE HIT]" puis 30 (sans recalculer)
+console.log(calculator.calculatePower(5, 2));  // Doit afficher "Calculating..." puis 10
 void typeExamples;
