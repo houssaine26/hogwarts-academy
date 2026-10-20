@@ -188,5 +188,22 @@ const typeExamples: [
   RemainingCategories,
   CategoryExample
 ] | null = null;
+console.log("\n--- Test Spell Validation (Exercise 4) ---");
+spells.add({
+  id: 102,
+  name: "Protego",
+  category: "defense",
+  power: 50
+});
 
+try {
+  spells.add({
+    id: 103,
+    name: "Invalid Spell",
+    category: "attack",
+    power: -10
+  });
+} catch (error) {
+  console.error("Caught expected error:", (error as Error).message);
+}
 void typeExamples;

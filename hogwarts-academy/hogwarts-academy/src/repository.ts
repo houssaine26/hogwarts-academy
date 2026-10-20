@@ -1,5 +1,5 @@
-import type { Wizard, Spell,NewWizard,House} from "./types";
-import { Log, MeasureTime } from "./decorators";
+import type { Wizard, Spell, NewWizard, House } from "./types";
+import { Log, MeasureTime, ValidateSpellPower } from "./decorators";
 
 export class Repository<T extends { id: number }> {
   private items: T[] = [];
@@ -29,18 +29,28 @@ export class Repository<T extends { id: number }> {
 }
 
 export class WizardRepository extends Repository<Wizard> {
-        addWizard(data: NewWizard):Wizard{
-          const currentWizards = this.getAll();
-          const nextId = currentWizards.length > 0 ? Math.max(...currentWizards.map(w=>w.id)) +1:1;
-          const fullWizard: Wizard ={
-            id:  nextId,
-            name: "Harry Potter",
-            house: "Gryffindor",
-            level: 1,
-            active: true      };
-     super.add(fullWizard);
-     return  fullWizard;}findByHouse(house: House): Wizard[] {
+  addWizard(data: NewWizard): Wizard {
+    const currentWizards = this.getAll();
+    const nextId = currentWizards.length > 0 ? Math.max(...currentWizards.map(w => w.id)) + 1 : 1;
+    const fullWizard: Wizard = {
+      id: nextId,
+      name: "Harry Potter",
+      house: "Gryffindor",
+      level: 1,
+      active: true
+    };
+    super.add(fullWizard);
+    return fullWizard;
+  }
+
+  findByHouse(house: House): Wizard[] {
     return this.getAll().filter(wizard => wizard.house === house);
   }
 }
-export class SpellRepository extends Repository<Spell> {}
+
+export class SpellRepository extends Repository<Spell> {
+  @ValidateSpellPower
+  override add(spell: Spell): void {
+    super.add(spell);
+  }
+}
