@@ -20,3 +20,7 @@ yarn-error.log*
 Thumbs.db
 .vscode/
 .idea/
+
+# Fichiers et dossiers spécifiques du projet
+TAF.pdf
+*.zip

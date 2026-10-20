@@ -9,6 +9,7 @@ import {
   type ArrayElement,
   type WizardSummary,
   type WizardUpdate,
+  type SpellCastEvent,
   type AttackSpell,
   type NonHealingCategory,
 } from "./types";
@@ -71,10 +72,9 @@ class AcademyService {
     return this.wizards.update(id, changes);
   }
 
-  getSpellEvents(events: AcademyEvent[]): Extract<AcademyEvent, { type: "spell-cast" }>[] {
+  getSpellEvents(events: AcademyEvent[]): SpellCastEvent[] {
     return events.filter(
-      (event): event is Extract<AcademyEvent, { type: "spell-cast" }> =>
-        event.type === "spell-cast"
+        (event): event is SpellCastEvent => event.type === "spell-cast"
     );
   }
 }
