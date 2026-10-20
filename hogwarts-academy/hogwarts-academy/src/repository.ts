@@ -1,4 +1,4 @@
-import type { Wizard, Spell,NewWizard} from "./types";
+import type { Wizard, Spell,NewWizard,House} from "./types";
 import { Log, MeasureTime } from "./decorators";
 
 export class Repository<T extends { id: number }> {
@@ -39,6 +39,8 @@ export class WizardRepository extends Repository<Wizard> {
             level: 1,
             active: true      };
      super.add(fullWizard);
-     return  fullWizard;}
+     return  fullWizard;}findByHouse(house: House): Wizard[] {
+    return this.getAll().filter(wizard => wizard.house === house);
+  }
 }
 export class SpellRepository extends Repository<Spell> {}
