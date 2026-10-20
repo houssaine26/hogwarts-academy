@@ -156,6 +156,18 @@ const events: AcademyEvent[] = [
 ];
 console.log(academy.getSpellEvents(events));
 
+function handleSpellCast(event: SpellCastEvent): void {
+  console.log(
+      `Wizard ${event.wizardId} cast ${event.spellName}`
+  );
+}
+
+handleSpellCast({
+  type: "spell-cast",
+  wizardId: 1,
+  spellName: "Expelliarmus"
+});
+
 // Compile-time demonstrations: these aliases are checked by TypeScript.
 type CastArguments = Parameters<AcademyService["castSpell"]>;
 type CastResult = ReturnType<AcademyService["castSpell"]>;
