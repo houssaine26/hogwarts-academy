@@ -17,12 +17,17 @@ import { Cache } from "./decorators";
 import { WizardRepository, SpellRepository } from "./repository";
 import { Log } from "./decorators";
 
+const validHouses: readonly House[] = [
+  "Gryffindor",
+  "Slytherin",
+  "Ravenclaw",
+  "Hufflepuff"
+];
+
 function isHouse(value: unknown): value is House {
   return (
-    value === "Gryffindor" ||
-    value === "Slytherin" ||
-    value === "Ravenclaw" ||
-    value === "Hufflepuff"
+      typeof value === "string" &&
+      validHouses.some(house => house === value)
   );
 }
 
@@ -35,18 +40,18 @@ function isWizard(value: unknown): value is Wizard {
   const candidate = value as Record<string, unknown>;
 
   return (
-    typeof candidate.id === "number" &&
-    typeof candidate.name === "string" &&
-    isHouse(candidate.house) &&
-    typeof candidate.level === "number" &&
-    typeof candidate.active === "boolean"
+      typeof candidate.id === "number" &&
+      typeof candidate.name === "string" &&
+      isHouse(candidate.house) &&
+      typeof candidate.level === "number" &&
+      typeof candidate.active === "boolean"
   );
 }
 
 class AcademyService {
   constructor(
-    private readonly wizards: WizardRepository,
-    private readonly spells: SpellRepository
+      private readonly wizards: WizardRepository,
+      private readonly spells: SpellRepository
   ) {}
 
   @Log
@@ -63,9 +68,9 @@ class AcademyService {
 
   findByHouse(house: House): WizardSummary[] {
     return this.wizards
-      .getAll()
-      .filter(wizard => wizard.house === house)
-      .map(({ id, name, house }) => ({ id, name, house }));
+        .getAll()
+        .filter(wizard => wizard.house === house)
+        .map(({ id, name, house }) => ({ id, name, house }));
   }
 
   updateWizard(id: number, changes: WizardUpdate): boolean {
@@ -188,6 +193,7 @@ const typeExamples: [
   RemainingCategories,
   CategoryExample
 ] | null = null;
+
 console.log("\n--- Test Spell Validation (Exercise 4) ---");
 spells.add({
   id: 102,
@@ -206,6 +212,7 @@ try {
 } catch (error) {
   console.error("Caught expected error:", (error as Error).message);
 }
+
 class SpellCalculator {
   @Cache
   calculatePower(basePower: number, multiplier: number): number {
@@ -220,4 +227,25 @@ const calculator = new SpellCalculator();
 console.log(calculator.calculatePower(10, 3)); // Doit afficher "Calculating..." puis 30
 console.log(calculator.calculatePower(10, 3)); // Doit afficher "[CACHE HIT]" puis 30 (sans recalculer)
 console.log(calculator.calculatePower(5, 2));  // Doit afficher "Calculating..." puis 10
+
+console.log("\n--- Test Type Guard Wizard & House (Exercise 6) ---");
+const validData: unknown = {
+  id: 1,
+  name: "Harry Potter",
+  house: "Gryffindor",
+  level: 5,
+  active: true
+};
+
+const invalidData: unknown = {
+  id: 2,
+  name: "Viktor",
+  house: "Durmstrang",
+  level: 5,
+  active: true
+};
+
+console.log(isWizard(validData));   // true
+console.log(isWizard(invalidData)); // false
+
 void typeExamples;
